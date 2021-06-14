@@ -49,6 +49,7 @@ class _SeedrState extends State<Seedr> {
       data = convertDatatoJson;
       print(isLoading);
       isLoading = false;
+      isEnableTile = true;
     });
   }
 
@@ -112,17 +113,20 @@ class _SeedrState extends State<Seedr> {
                         minWidth: 300.0,
                         child: RaisedButton(
                           onPressed: () {
-                            FocusScope.of(context).unfocus();
-                            final isValid = _formKey.currentState.validate();
-                            if (isValid) {
-                              setState(() {
-                                isLoading = true;
-                              });
-                              searchResults(_search);
-                            } else {
-                              setState(() {
-                                _autoValidate = true;
-                              });
+                            if (isEnableTile) {
+                              FocusScope.of(context).unfocus();
+                              final isValid = _formKey.currentState.validate();
+                              if (isValid) {
+                                setState(() {
+                                  isLoading = true;
+                                  isEnableTile = false;
+                                });
+                                searchResults(_search);
+                              } else {
+                                setState(() {
+                                  _autoValidate = true;
+                                });
+                              }
                             }
                           },
                           child: Text(
@@ -204,7 +208,7 @@ class _SeedrState extends State<Seedr> {
                       ],
                     ),
                     onTap: () async {
-                      if (isEnableTile == true) {
+                      if (isEnableTile) {
                         setState(() {
                           isLoading = true;
                           isEnableTile = false;
@@ -240,7 +244,7 @@ class _SeedrState extends State<Seedr> {
                           // and use it to show a SnackBar.
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
-                      } else if (snackBarCounter < 3) {
+                      } else if (snackBarCounter < 2) {
                         snackBarCounter += 1;
                         final snackBar = SnackBar(
                           backgroundColor: Colors.green,
