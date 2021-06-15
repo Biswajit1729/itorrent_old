@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:itorrent/Apis/torrentSearchClass/GetMagnetLink.dart';
+import '../auto_search_complete_helper_fun.dart';
 import 'web_seedr/customtabseedr.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class Seedr extends StatefulWidget {
   final String title;
@@ -87,14 +89,19 @@ class _SeedrState extends State<Seedr> {
                       Padding(padding: EdgeInsets.all(0.0)),
                       Image(
                         image: AssetImage("images/logo.png"),
-                        width: 100.0,
-                        height: 90.0,
                       ),
-                      buildListTileTextFormFieldSearch(),
-                      buildButtonThemeSearchBTN(context),
-                      SizedBox(
-                        height: 16.0,
-                      )
+                      Row(
+                        children: [
+                          Expanded(
+                              flex: 5,
+                              child: buildListTileTextFormFieldSearch()),
+                          SizedBox(width: 5.0),
+                          Expanded(
+                              flex: 1,
+                              child: buildButtonThemeSearchBTN(context)),
+                        ],
+                      ),
+                      SizedBox(height: 16.0)
                     ],
                   ),
                 ),
@@ -134,8 +141,7 @@ class _SeedrState extends State<Seedr> {
 
   ButtonTheme buildButtonThemeSearchBTN(BuildContext context) {
     return ButtonTheme(
-      height: 40.0,
-      minWidth: 300.0,
+      height: 55,
       child: RaisedButton(
         onPressed: () {
           if (isEnableTile) {
@@ -154,10 +160,9 @@ class _SeedrState extends State<Seedr> {
             }
           }
         },
-        child: Text(
-          'Search',
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17.0),
+        child: Icon(
+          Icons.search,
+          color: Colors.white,
         ),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -166,24 +171,52 @@ class _SeedrState extends State<Seedr> {
     );
   }
 
-  ListTile buildListTileTextFormFieldSearch() {
-    return ListTile(
-      // leading: Icon(Icons.search),
-      title: TextFormField(
-        onChanged: (value) {
-          _search = value;
-        },
-        validator: (input) {
-          if (input.isEmpty) {
-            return "Enter Something";
-          }
-          return null;
-        },
-        decoration: InputDecoration(
-            labelText: "Search",
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.search)),
-      ),
+  TypeAheadField buildListTileTextFormFieldSearch() {
+    // return ListTile(
+    //   // leading: Icon(Icons.search),
+    //   title: TextFormField(
+    //     onChanged: (value) {
+    //       _search = value;
+    //     },
+    //     validator: (input) {
+    //       if (input.isEmpty) {
+    //         return "Enter Something";
+    //       }
+    //       return null;
+    //     },
+    //     decoration: InputDecoration(
+    //         labelText: "Search",
+    //         border: OutlineInputBorder(),
+    //         prefixIcon: Icon(Icons.search)),
+    //   ),
+    // );
+    return TypeAheadField(
+      textFieldConfiguration: TextFieldConfiguration(
+          autofocus: true,
+          style: TextStyle(fontSize: 12),
+          decoration: InputDecoration(
+              labelText: "Search",
+              prefixIcon: Icon(Icons.search),
+              hintText: _search,
+              border: OutlineInputBorder())),
+      suggestionsCallback: (pattern) async {
+        return await getSustions(pattern);
+      },
+      itemBuilder: (context, suggestion) {
+        return ListTile(leading: Icon(Icons.search), title: Text(suggestion));
+      },
+      onSuggestionSelected: (suggestion) {
+        FocusScope.of(context).unfocus();
+        print(suggestion);
+        _search = suggestion;
+        setState(() {
+          isLoading = true;
+          isEnableTile = false;
+        });
+        searchResults(_search);
+        // Navigator.of(context).push(MaterialPageRoute(
+        //     builder: (context) => ProductPage(product: suggestion)));
+      },
     );
   }
 
