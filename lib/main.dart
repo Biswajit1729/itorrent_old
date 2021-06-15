@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'iTorrent',
       theme: ThemeData(primarySwatch: Colors.grey, accentColor: Colors.black),
       home: Seedr(title: 'iTorrent'),
     );

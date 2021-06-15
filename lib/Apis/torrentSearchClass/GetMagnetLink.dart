@@ -22,7 +22,7 @@ class GetMagnetLink {
 
   Future addMagnetLinkinSeedr(l) async {
     String endpointUrl =
-        "https://hardcore-kilby-751fdb.netlify.app/.netlify/functions/api/magnetLink/";
+        "https://itorrentseedrapi.herokuapp.com/magnetLink/";
     Map<String, String> queryParams = {'link': l};
     String queryString = Uri(queryParameters: queryParams).query;
     final requestUrl = endpointUrl + '?' + queryString;
