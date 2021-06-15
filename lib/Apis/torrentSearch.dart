@@ -87,60 +87,11 @@ class _SeedrState extends State<Seedr> {
                       Padding(padding: EdgeInsets.all(0.0)),
                       Image(
                         image: AssetImage("images/logo.png"),
-                        width: 200.0,
+                        width: 100.0,
                         height: 90.0,
                       ),
-                      ListTile(
-                        // leading: Icon(Icons.search),
-                        title: TextFormField(
-                          onChanged: (value) {
-                            _search = value;
-                          },
-                          validator: (input) {
-                            if (input.isEmpty) {
-                              return "Enter Something";
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                              labelText: "Search",
-                              border: OutlineInputBorder(),
-                              prefixIcon: Icon(Icons.search)),
-                        ),
-                      ),
-                      ButtonTheme(
-                        height: 40.0,
-                        minWidth: 300.0,
-                        child: RaisedButton(
-                          onPressed: () {
-                            if (isEnableTile) {
-                              FocusScope.of(context).unfocus();
-                              final isValid = _formKey.currentState.validate();
-                              if (isValid) {
-                                setState(() {
-                                  isLoading = true;
-                                  isEnableTile = false;
-                                });
-                                searchResults(_search);
-                              } else {
-                                setState(() {
-                                  _autoValidate = true;
-                                });
-                              }
-                            }
-                          },
-                          child: Text(
-                            'Search',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17.0),
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          color: Colors.black54,
-                        ),
-                      ),
+                      buildListTileTextFormFieldSearch(),
+                      buildButtonThemeSearchBTN(context),
                       SizedBox(
                         height: 16.0,
                       )
@@ -157,17 +108,21 @@ class _SeedrState extends State<Seedr> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.search,
-                                color: Colors.grey,
-                                size: 110.0,
+                              Expanded(
+                                child: Icon(
+                                  Icons.search,
+                                  color: Colors.grey,
+                                  size: 110.0,
+                                ),
                               ),
-                              Text(
-                                'No results to dislplay',
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold),
+                              Expanded(
+                                child: Text(
+                                  'No results to display',
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               )
                             ],
                           ),
@@ -175,6 +130,61 @@ class _SeedrState extends State<Seedr> {
             ],
           ),
         ));
+  }
+
+  ButtonTheme buildButtonThemeSearchBTN(BuildContext context) {
+    return ButtonTheme(
+      height: 40.0,
+      minWidth: 300.0,
+      child: RaisedButton(
+        onPressed: () {
+          if (isEnableTile) {
+            FocusScope.of(context).unfocus();
+            final isValid = _formKey.currentState.validate();
+            if (isValid) {
+              setState(() {
+                isLoading = true;
+                isEnableTile = false;
+              });
+              searchResults(_search);
+            } else {
+              setState(() {
+                _autoValidate = true;
+              });
+            }
+          }
+        },
+        child: Text(
+          'Search',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17.0),
+        ),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        color: Colors.black54,
+      ),
+    );
+  }
+
+  ListTile buildListTileTextFormFieldSearch() {
+    return ListTile(
+      // leading: Icon(Icons.search),
+      title: TextFormField(
+        onChanged: (value) {
+          _search = value;
+        },
+        validator: (input) {
+          if (input.isEmpty) {
+            return "Enter Something";
+          }
+          return null;
+        },
+        decoration: InputDecoration(
+            labelText: "Search",
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.search)),
+      ),
+    );
   }
 
   Widget listView() {
