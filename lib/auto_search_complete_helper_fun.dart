@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future getSustions(String pattern) async {
+Future getSuggestion(String pattern) async {
   String endpointUrl = "https://suggestqueries.google.com/complete/search";
   Map<String, String> queryParams = {
     'client': "firefox",
@@ -13,8 +13,11 @@ Future getSustions(String pattern) async {
   final requestUrl = endpointUrl + '?' + queryString;
 
   var res = await http.get(Uri.encodeFull(requestUrl), headers: {
-    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+    "Accept": "*/*",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": "true",
+    "content-type": "text/javascript; charset=ISO-8859-1",
     "Access-Control-Allow-Headers":
         "Origin, X-Requested-With, Content-Type,   Accept, x-client-key, x-client-token, x-client-secret, Authorization"
   });
