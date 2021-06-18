@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GetMagnetLink {
   Future getlink(i, q) async {
@@ -21,12 +22,14 @@ class GetMagnetLink {
   }
 
   Future addMagnetLinkinSeedr(l) async {
-    String endpointUrl =
-        "https://itorrentseedrapi.herokuapp.com/magnetLink/";
-    Map<String, String> queryParams = {'link': l};
+    var data = await getSharedPreferencesData();
+    var email = data[0];
+    var password = data[1];
+    String endpointUrl = "https://itorrentseedrapi.herokuapp.com/magnetLink/";
+    Map<String, String> queryParams = {'e': email, 'p': password, 'link': l};
     String queryString = Uri(queryParameters: queryParams).query;
     final requestUrl = endpointUrl + '?' + queryString;
-
+    print("biswajit:$requestUrl");
     var res = await http.get(Uri.parse(requestUrl));
     var result = json.decode(res.body);
 
@@ -39,5 +42,12 @@ class GetMagnetLink {
       print(result['result']);
     }
     return statuseCode;
+  }
+
+  Future getSharedPreferencesData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var email = prefs.getString('email');
+    var password = prefs.getString('password');
+    return [email, password];
   }
 }

@@ -193,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: Icon(Icons.search),
             title: Text(
               suggestion,
-              style: TextStyle(fontSize: 10),
+              style: TextStyle(fontSize: 15),
             ));
       },
       onSuggestionSelected: (suggestion) {

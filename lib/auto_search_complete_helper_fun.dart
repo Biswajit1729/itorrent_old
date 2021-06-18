@@ -5,7 +5,7 @@ import 'dart:convert';
 Future getSuggestion(String pattern) async {
   String endpointUrl = "https://suggestqueries.google.com/complete/search";
   Map<String, String> queryParams = {
-    'client': "firefox",
+    'client': "chrome",
     'hl': "en",
     "q": pattern
   };
@@ -13,13 +13,11 @@ Future getSuggestion(String pattern) async {
   final requestUrl = endpointUrl + '?' + queryString;
 
   var res = await http.get(Uri.encodeFull(requestUrl), headers: {
-    "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
-    "Accept": "*/*",
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Credentials": "true",
-    "content-type": "text/javascript; charset=ISO-8859-1",
-    "Access-Control-Allow-Headers":
-        "Origin, X-Requested-With, Content-Type,   Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+    "Access-Control-Allow-Methods": "GET, HEAD",
+    'content-type': 'application/json; charset=UTF-8',
+    'Accept': '*/*',
+    'Connection': 'keep-alive',
   });
   List link = jsonDecode(res.body)[1];
   return link;
